@@ -5,28 +5,29 @@
 %define		pkgname	polyparse
 Summary:	A variety of alternative parser combinator libraries
 Name:		ghc-%{pkgname}
-Version:	1.12
+Version:	1.13
 Release:	1
 License:	LGPL
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/polyparse
 Source0:	http://hackage.haskell.org/package/%{pkgname}-%{version}/%{pkgname}-%{version}.tar.gz
-# Source0-md5:	d925e7a465a65c1b41b8acc40cc19d39
+# Source0-md5:	6656b800ff52a842ca0fd8083bad2e7d
+Patch0:		ghc-8.10.patch
 URL:		http://hackage.haskell.org/package/polyparse
 BuildRequires:	ghc >= 6.12.3
-BuildRequires:	ghc-base < 6
+BuildRequires:	ghc-base
 BuildRequires:	ghc-bytestring
 BuildRequires:	ghc-text
 %if %{with prof}
 BuildRequires:	ghc-prof >= 6.12.3
-BuildRequires:	ghc-base-prof < 6
+BuildRequires:	ghc-base-prof
 BuildRequires:	ghc-bytestring-prof
 BuildRequires:	ghc-text-prof
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.608
 Requires(post,postun):	/usr/bin/ghc-pkg
 %requires_eq	ghc
-Requires:	ghc-base < 6
+Requires:	ghc-base
 Requires:	ghc-bytestring
 Requires:	ghc-text
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -49,7 +50,7 @@ Summary:	Profiling %{pkgname} library for GHC
 Summary(pl.UTF-8):	Biblioteka profilująca %{pkgname} dla GHC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	ghc-base-prof < 6
+Requires:	ghc-base-prof
 Requires:	ghc-bytestring-prof
 Requires:	ghc-text-prof
 
@@ -63,6 +64,7 @@ kiedy potrzebujemy systemu profilującego z GHC.
 
 %prep
 %setup -q -n %{pkgname}-%{version}
+%patch0 -p1
 
 %build
 runhaskell Setup.hs configure -v2 \
@@ -103,21 +105,26 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{name}-%{version}-doc/*
 %{_libdir}/%{ghcdir}/package.conf.d/%{pkgname}.conf
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/HSpolyparse-%{version}.o
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}-*.so
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}-*.a
+%exclude %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}-*_p.a
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/*.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/Parse
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/Parse/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/Parse/*.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/*.dyn_hi
 %dir %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/Poly
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/Poly/*.hi
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/Poly/*.dyn_hi
 
 %if %{with prof}
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}_p.a
+%{_libdir}/%{ghcdir}/%{pkgname}-%{version}/libHSpolyparse-%{version}-*_p.a
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/*.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/Parse/*.p_hi
 %{_libdir}/%{ghcdir}/%{pkgname}-%{version}/Text/ParserCombinators/*.p_hi

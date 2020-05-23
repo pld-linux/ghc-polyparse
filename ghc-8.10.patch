@@ -1,0 +1,11 @@
+--- polyparse-1.13/polyparse.cabal~	2001-09-09 03:46:40.000000000 +0200
++++ polyparse-1.13/polyparse.cabal	2020-05-23 14:49:28.553607919 +0200
+@@ -47,7 +47,7 @@
+ 
+ library
+   hs-source-dirs:       src
+-  build-depends:        base >= 4.3.1.0 && < 4.14
++  build-depends:        base >= 4.3.1.0
+ 
+   if !impl(ghc >= 8.0)
+      build-depends: fail == 4.9.*
