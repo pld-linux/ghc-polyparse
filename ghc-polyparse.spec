@@ -6,7 +6,7 @@
 Summary:	A variety of alternative parser combinator libraries
 Name:		ghc-%{pkgname}
 Version:	1.13
-Release:	1
+Release:	2
 License:	LGPL
 Group:		Development/Languages
 #Source0Download: http://hackage.haskell.org/package/polyparse
